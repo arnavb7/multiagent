@@ -295,8 +295,8 @@ def betterEvaluationFunction(currentGameState: GameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
-    DESCRIPTION: Added game score, reciprocal of nearest
-    food distance, food count penalty, capsule count penalty, and average ghost proximity (normal and scared).
+    DESCRIPTION: Function adds game score, 10 / reciprocal of nearest
+    food distance (for increased importance of food), food count penalty, capsule count penalty, and average ghost proximity (normal and scared).
     """
     pos = currentGameState.getPacmanPosition()
     food = currentGameState.getFood()
