@@ -258,8 +258,37 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         All ghosts should be modeled as choosing uniformly at random from their
         legal moves.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        pacman_legal_actions = gameState.getLegalActions(0)
+        best_action = None
+        best_score = float('-inf')
+        for action in pacman_legal_actions:
+            successor_game_state = gameState.generateSuccessor(0, action)
+            score = self.recursive_expectimax(successor_game_state, self.depth, 1)
+            if score > best_score:
+                best_score = score
+                best_action = action
+        return best_action
+
+    def recursive_expectimax(self, state, depth, agentIndex):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state)
+
+        legal_actions = state.getLegalActions(agentIndex)
+        if agentIndex == 0:
+            # max of recursive generator if pacman's turn
+            return max(
+                self.recursive_expectimax(state.generateSuccessor(agentIndex, action), depth, 1) for action in legal_actions)
+        else:
+            nextAgent = agentIndex + 1
+            if nextAgent == state.getNumAgents():
+                nextAgent = 0
+                newDepth = depth - 1
+            else:
+                newDepth = depth
+            # average of recursive generator values if ghost's turn
+            return sum(
+                self.recursive_expectimax(state.generateSuccessor(agentIndex, action), newDepth, nextAgent) for action in legal_actions
+            ) / len(legal_actions)
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
