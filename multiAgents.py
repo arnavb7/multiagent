@@ -221,7 +221,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             v = float('-inf')
             for action in legal_actions:
                 v = max(v, self.ab_minimax(state.generateSuccessor(agentIndex, action), depth, 1, alpha, beta))
-                # pacman finds a value that's greater than the smallest value
+                # pacman finds a value that's greater than smallest value
                 # a ghost has encountered so far, so his value will never traverse
                 # up the tree
                 if v > beta:
@@ -238,7 +238,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             v = float('inf')
             for action in legal_actions:
                 v = min(v, self.ab_minimax(state.generateSuccessor(agentIndex, action), newDepth, nextAgent, alpha, beta))
-                # ghost finds a value that's less than the greatest value
+                # ghost finds a value that's less than greatest value
                 # pacman has encountered so far, so his value will never traverse
                 # up the tree
                 if v < alpha:
