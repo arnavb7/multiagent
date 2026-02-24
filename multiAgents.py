@@ -198,8 +198,53 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
         Returns the minimax action using self.depth and self.evaluationFunction
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        pacman_legal_actions = gameState.getLegalActions(0)
+        best_action = None
+        best_score = float('-inf')
+        alpha = float('-inf') # best value max can guarantee throughout recursion
+        beta = float('inf') # best value min can guarantee throughout recursion
+        for action in pacman_legal_actions:
+            successor_game_state = gameState.generateSuccessor(0, action)
+            score = self.ab_minimax(successor_game_state, self.depth, 1, alpha, beta)
+            if score > best_score:
+                best_score = score
+                best_action = action
+            alpha = max(alpha, best_score)
+        return best_action
+
+    def ab_minimax(self, state, depth, agentIndex, alpha, beta):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state)
+
+        legal_actions = state.getLegalActions(agentIndex)
+        if agentIndex == 0:
+            v = float('-inf')
+            for action in legal_actions:
+                v = max(v, self.ab_minimax(state.generateSuccessor(agentIndex, action), depth, 1, alpha, beta))
+                # pacman finds a value that's greater than the smallest value
+                # a ghost has encountered so far, so his value will never traverse
+                # up the tree
+                if v > beta:
+                    return v
+                alpha = max(alpha, v)
+            return v
+        else:
+            nextAgent = agentIndex + 1
+            if nextAgent == state.getNumAgents():
+                nextAgent = 0
+                newDepth = depth - 1
+            else:
+                newDepth = depth
+            v = float('inf')
+            for action in legal_actions:
+                v = min(v, self.ab_minimax(state.generateSuccessor(agentIndex, action), newDepth, nextAgent, alpha, beta))
+                # ghost finds a value that's less than the greatest value
+                # pacman has encountered so far, so his value will never traverse
+                # up the tree
+                if v < alpha:
+                    return v
+                beta = min(beta, v)
+            return v
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
